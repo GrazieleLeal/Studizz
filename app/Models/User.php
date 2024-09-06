@@ -6,17 +6,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens;
-    use HasFactory;
-    use HasProfilePhoto;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -25,8 +18,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'papel_id',
         'email',
         'password',
+        'imagem'
     ];
 
     /**
@@ -37,17 +32,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'two_factor_recovery_codes',
-        'two_factor_secret',
-    ];
-
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array<int, string>
-     */
-    protected $appends = [
-        'profile_photo_url',
     ];
 
     /**
@@ -61,5 +45,20 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function papel(): BelongsTo
+    {
+        return $this->belongsTo(Papel::class,'papel_id','id');
+    }
+
+    public function feedback(): HasMany
+    {
+        return $this->hasMany(Feedback::class,'usuario_id','id');
+    }
+
+    public function pergunta(): HasMany
+    {
+        return $this->hasMany(Pergunta::class,'usuario_id','id');
     }
 }
