@@ -18,6 +18,11 @@
                         </table>
                         <h4 class="card-title ">Suas perguntas</h4>
                         <div class="table-responsive ">
+                            @if ($message = Session::get('success'))
+                                <div class="alert alert-success">
+                                    <p>{{ $message }}</p>
+                                </div>
+                            @endif
                             <table class="table ">
                                 <thead>
                                     <tr>
@@ -25,55 +30,28 @@
                                         <th>Nº alternativas</th>
                                         <th>Data de criação</th>
                                         <th>Status</th>
-                                        <th>Ver pergunta</th>
+                                        <th><!--Aqui é o ver pergunta, edita e deleta--></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Qual o nome do grupo dos escorpiões</td>
-                                        <td>2</td>
-                                        <td>26/03/2024</td>
-                                        <td><label class="badge badge-danger ">Pending</label></td>
-                                        <td>
-                                            <a class="btn btn-primary mr-2 " href="{{route('detalhesP')}}">Pergunta</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Messsy</td>
-                                        <td>53275532</td>
-                                        <td>15 May 2017</td>
-                                        <td><label class="badge badge-warning ">In progress</label></td>
-                                        <td>
-                                            <a class="btn btn-primary mr-2 " href="detalhesP.html ">Pergunta</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>John</td>
-                                        <td>53275533</td>
-                                        <td>14 May 2017</td>
-                                        <td><label class="badge badge-info ">Fixed</label></td>
-                                        <td>
-                                            <a class="btn btn-primary mr-2 " href="detalhesP.html ">Pergunta</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Peter</td>
-                                        <td>53275534</td>
-                                        <td>16 May 2017</td>
-                                        <td><label class="badge badge-success ">Completed</label></td>
-                                        <td>
-                                            <a class="btn btn-primary mr-2 " href="detalhesP.html ">Pergunta</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Dave</td>
-                                        <td>53275535</td>
-                                        <td>20 May 2017</td>
-                                        <td><label class="badge badge-warning ">In progress</label></td>
-                                        <td>
-                                            <a class="btn btn-primary mr-2 " href="detalhesP.html ">Pergunta</a>
-                                        </td>
-                                    </tr>
+                                    @foreach ($data as $key => $value)
+                                        <tr>
+                                            <td>{{ \Str::limit($value->pergunta, 100) }}</td>
+                                            <td>2</td>
+                                            <td>{{ $value->created_at }}</td>
+                                            <td>{!! $value->aprovada_badge !!}</td>
+
+                                            <td>
+                                                <form action="{{ route('criaPergunta.destroy',$value->id) }}" method="POST">
+                                                    <a class="btn btn-primary" href="{{ route('criaPergunta.show',$value->id) }}">Pergunta</a>
+                                                    <a class="btn btn-info" href="{{ route('criaPergunta.edit',$value->id) }}">Editar</a>
+                                                    @csrf<!--token que so aceita coisas que vem dele proprio-->
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Deletar</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

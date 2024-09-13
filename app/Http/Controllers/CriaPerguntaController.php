@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Pergunta;
 use App\Models\Alternativa;
 use App\Models\Categoria;
+use App\Models\Subcategoria;
+use App\Models\PerguntaSubcategoria;
 
 use Illuminate\Http\Request;
 
@@ -17,7 +19,10 @@ class CriaPerguntaController extends Controller
         //$data = Produto::latest()->paginate(5);//joga os ultimos 5 elementos em data
         //return view('produtos.index', compact('data'))->with('i', (request()->input('page', 1) - 1 * 5));
 
-        $data = Pergunta::all();//joga todos os produtos da tabela em data
+        //$data = Pergunta::all();//joga todos os produtos da tabela em data
+        //return view('frontend.criaPergunta.index', compact('data'));
+
+        $data = Pergunta::where('users_id', auth()->id())->get();
         return view('frontend.criaPergunta.index', compact('data'));
     }
 
@@ -26,7 +31,10 @@ class CriaPerguntaController extends Controller
      */
     public function create()
     {
-        return view('frontend.criaPergunta.create');
+        $categorias = Categoria::all();
+        $subcategorias = Subcategoria::all();
+
+        return view('frontend.criaPergunta.create', compact('categorias','subcategorias'));
     }
 
     /**
@@ -34,39 +42,44 @@ class CriaPerguntaController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        // Validar os dados de entrada
+
+        $validatedData = $request->validate([
+            'categoria_id' => 'required',
+            'subcategoria_id' => 'required',
+            'nivel' => 'required|in:1,2,3',
             'pergunta' => 'required',
-            'nivel' => 'required',
-            'descricao' => 'required',
-            'correta' => 'required'
+            'alternativas' => 'required|array',
+            'alternativas.*.correta' => 'required|in:0,1',
         ]);
 
-        //Produto::create($request->all());//pega todos os dados
+        // Criar a pergunta
+        $pergunta = new Pergunta();
+        $pergunta->users_id = auth()->id();
+        $pergunta->nivel = $request->input('nivel');
+        $pergunta->pergunta = $request->input('pergunta');
+        $pergunta->imagem = $request->input('imagem');
+        $pergunta->aprovada = null;
+        $pergunta->save();
 
-        Pergunta::create([
-            'usuario_id' => auth()->user()->id,
-            'pergunta' => $request["pergunta"],
-            'nivel' => $request["nivel"],
-            'aprovada' => 0
-        ]);
+        // Criar a relação entre a pergunta e a subcategoria
+        $perguntaSubcategoria = new PerguntaSubcategoria();
+        $perguntaSubcategoria->pergunta_id = $pergunta->id;
+        $perguntaSubcategoria->subcategoria_id = $request->input('subcategoria_id');
+        $perguntaSubcategoria->save();
 
-        $alternativas = [];
-        foreach ($request->input('alternativas') as $alternativa) {
-
-            $alternativas[] = Alternativa::create([
-                'pergunta_id' => $pergunta->id,
-                'descricao' => $alternativa['descricao'],
-                'correta' => $alternativa['correta'],
-            ]);
+        foreach ($alternativas = $request->input('alternativas') as $alternativa) {
+            if (!empty($alternativa['descricao'])) {
+                // Insere a alternativa no banco de dados
+                Alternativa::create([
+                    'pergunta_id' => $pergunta->id,
+                    'descricao' => $alternativa['descricao'],
+                    'correta' => $alternativa['correta'],
+                ]);
+            }
         }
-/*
-        Alternativa::create([
-            'pergunta_id' => $pergunta->id,
-            'descricao' => $request["pergunta"],
-            'correta' => $request["nivel"],
-        ]);
-*/
-        return redirect()->route('criapergunta.index')->with('success', 'Produto criado com sucesso');
+        // Redirecionar para uma página de sucesso
+        return redirect()->route('criaPergunta.index')->with('success', 'Produto criado com sucesso');
     }
 
     /**
@@ -74,7 +87,20 @@ class CriaPerguntaController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $pergunta = Pergunta::find($id);
+        $alternativas = $pergunta->alternativa;
+        $niveis = [
+            1 => 'Fácil',
+            2 => 'Médio',
+            3 => 'Difícil',
+        ];
+        $subcategoria = Subcategoria::find(
+            PerguntaSubcategoria::where('pergunta_id', $pergunta->id)
+                ->first()
+                ->subcategoria_id
+        );
+        $categoria = Categoria::find($subcategoria->categoria_id);
+        return view('frontend.criaPergunta.show', compact('pergunta', 'alternativas','niveis','categoria','subcategoria'));
     }
 
     /**
@@ -82,7 +108,10 @@ class CriaPerguntaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $pergunta = Pergunta::find($id);
+        $categorias = Categoria::all();
+        $subcategorias = Subcategoria::all();
+        return view('frontend.criaPergunta.edit', compact('pergunta','categorias','subcategorias'));
     }
 
     /**
@@ -90,7 +119,57 @@ class CriaPerguntaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Validar os dados de entrada
+
+        $validatedData = $request->validate([
+            'categoria_id' => 'required',
+            'subcategoria_id' => 'required',
+            'nivel' => 'required|in:1,2,3',
+            'pergunta' => 'required',
+            'alternativas' => 'required|array',
+            //'alternativas.*.descricao' => 'required|string',
+            'alternativas.*.correta' => 'required|in:0,1',
+        ]);
+
+         // Atualizar a pergunta
+        $pergunta->nivel = $request->input('nivel');
+        $pergunta->pergunta = $request->input('pergunta');
+        $pergunta->imagem = $request->input('imagem');
+        $pergunta->aprovada = null;
+        $pergunta->save();
+
+        foreach ($alternativas = $request->input('alternativas') as $alternativa) {
+            if (!empty($alternativa['descricao'])) {
+                // Insere a alternativa no banco de dados
+                Alternativa::update([
+                    'pergunta_id' => $pergunta->id,
+                    'descricao' => $alternativa['descricao'],
+                    'correta' => $alternativa['correta'],
+                ]);
+            }
+        }
+
+        foreach ($alternativas = $request->input('alternativas') as $alternativa) {
+            if (!empty($alternativa['descricao'])) {
+                // Atualizar a alternativa existente ou criar uma nova
+                $alternativaExistente = Alternativa::where('pergunta_id', $pergunta->id)
+                    ->where('descricao', $alternativa['descricao'])
+                    ->first();
+                if ($alternativaExistente) {
+                    $alternativaExistente->correta = $alternativa['correta'];
+                    $alternativaExistente->save();
+                } else {
+                    Alternativa::create([
+                        'pergunta_id' => $pergunta->id,
+                        'descricao' => $alternativa['descricao'],
+                        'correta' => $alternativa['correta'],
+                    ]);
+                }
+            }
+        }
+
+        // Redirecionar para uma página de sucesso
+        return redirect()->route('criaPergunta.index')->with('success', 'Produto criado com sucesso');
     }
 
     /**
@@ -98,6 +177,29 @@ class CriaPerguntaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        /*
+        $pergunta->delete();
+        $ps->delete();
+        $alternativa->delete();
+        return redirect()->route('criaPergunta.index')->with('success', 'Produto deletado com sucesso');
+        */
+
+        $pergunta = Pergunta::find($id);
+        //if ($pergunta) {
+            $alternativas = $pergunta->alternativas;
+            if ($alternativas) {
+                foreach ($alternativas as $alternativa) {
+                    $alternativa->delete();
+                }
+            }
+
+            PerguntaSubcategoria::where('pergunta_id', $pergunta->id)->delete();
+
+            $pergunta->delete();
+            return redirect()->route('criaPergunta.index')->with('success', 'Pergunta deletada com sucesso');
+        //} else {
+            //return redirect()->route('criaPergunta.index')->with('error', 'Pergunta não encontrada');
+        //}
+
     }
 }

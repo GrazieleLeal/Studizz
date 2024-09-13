@@ -1,7 +1,7 @@
 @extends('layouts.regal.regal')
 @section('main')
 
-<!--
+{{--
 @if ($errors->any())
     <script>
         Swal.fire({
@@ -22,7 +22,7 @@
     </div>
 
 @endif
--->
+--}}
 
 <div class="main-panel">
     <div class="content-wrapper">
@@ -35,30 +35,18 @@
                             @csrf
                             <div class="form-group">
                                 <label for="categoria">Categoria</label>
-                                <select class="form-control" name="categoria" id="categoria">
-                                    <option>DW</option>
-                                    <option>Mat</option>
-                                    <option>Bio</option>
-                                    <option>Mat</option>
-                                    <option>Mat</option>
-                                    <option>Mat</option>
-                                    <option>Mat</option>
-                                    <option>Mat</option>
-                                    <option>Mat</option>
+                                <select class="form-control" name="categoria_id" id="categoria">
+                                    @foreach($categorias as $categoria)
+                                    <option value="{{ $categoria->id }}">{{ $categoria->descricao }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="subcategoria">Subcategoria</label>
-                                <select class="form-control" name="subcategoria" id="subcategoria">
-                                    <option>Plantas</option>
-                                    <option>Orgãos</option>
-                                    <option>Animais</option>
-                                    <option>Mat</option>
-                                    <option>Mat</option>
-                                    <option>Mat</option>
-                                    <option>Mat</option>
-                                    <option>Mat</option>
-                                    <option>Mat</option>
+                                <select class="form-control" name="subcategoria_id" id="subcategoria">
+                                    @foreach($subcategorias as $subcategoria)
+                                        <option value="{{ $subcategoria->id }}" {{ $subcategoria->categoria_id == $categoria->id ? 'selected' : '' }}>{{ $subcategoria->descricao }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
@@ -77,54 +65,27 @@
                                 <label for="imagem">Adicione uma imagem</label>
                                 <input type="file" class="form-control text-center center-block file-upload" name="imagem" id="imagem">
                             </div>
-                            <div class="form-group">
-                                <label for="alternativa1">Alternativa correta</label>
-                                <input type="text" name="alternativas[0][descricao]" class="form-control" name="descricao" id="alternativa1" placeholder="Alternativa correta">
-                                <input type="hidden" name="alternativas[0][correta]" value="1"> <!-- Alternativa correta -->
-                            </div>
-                            <div class="form-group">
-                                <label for="alternativa2">Alternativa</label>
-                                <input type="text" name="alternativas[1][descricao]" class="form-control" name="descricao" id="alternativa2" placeholder="Alternativa">
-                                <input type="hidden" name="alternativas[1][correta]" value="0"> <!-- Alternativa incorreta -->
-                            </div>
-                            <div class="form-group">
-                                <label for="alternativa3">Alternativa</label>
-                                <input type="text" name="alternativas[2][descricao]" class="form-control" name="descricao" id="alternativa3" placeholder="Alternativa">
-                                <input type="hidden" name="alternativas[2][correta]" value="0"> <!-- Alternativa incorreta -->
-                            </div>
-                            <div class="form-group">
-                                <label for="alternativa4">Alternativa</label>
-                                <input type="text" name="alternativas[3][descricao]" class="form-control" name="descricao" id="alternativa4" placeholder="Alternativa">
-                                <input type="hidden" name="alternativas[3][correta]" value="0"> <!-- Alternativa incorreta -->
-                            </div>
-                            <div class="form-group">
-                                <label for="alternativa5">Alternativa</label>
-                                <input type="text" name="alternativas[4][descricao]" class="form-control" name="descricao" id="alternativa5" placeholder="Alternativa">
-                                <input type="hidden" name="alternativas[4][correta]" value="0"> <!-- Alternativa incorreta -->
-                            </div>
-                            <!--<input type="submit" href="criaA.html" class="btn btn-primary mr-2" value="Próximo">-->
+
+                            @for($i = 0; $i < 5; $i++)
+                                @if($i == 0)
+                                    <input type="text" name="alternativas[{{ $i }}][descricao]" class="form-control"  id="alternativaC" placeholder="Alternativa correta" required>
+                                @else
+                                    <input type="text" name="alternativas[{{ $i }}][descricao]" class="form-control"  id="alternativaE" placeholder="Alternativa incorreta">
+                                @endif
+
+                                @if($i == 0)
+                                    <div class="form-group">
+                                        <input type="hidden" name="alternativas[{{ $i }}][correta]" value="1"> <!-- Alternativa correta -->
+                                    </div>
+
+                                @else
+                                    <div class="form-group">
+                                        <input type="hidden" name="alternativas[{{ $i }}][correta]" value="0"> <!-- Alternativa errada -->
+                                    </div>
+                                @endif
+                            @endfor
+                            <a class="btn btn-secondary mr2" href="{{route('criaPergunta.index')}}">Voltar</a>
                             <button type="submit" class="btn btn-primary mr2">Criar Pergunta</button>
-                            <!--<a href="{{route('criaA')}}" class="btn btn-primary mr-2">Próximo</a>-->
-                        </form>
-                        <form class="forms-sample" action="{{ route('criaPergunta.store') }}" method="POST">
-                            <!--
-                            <div class="form-group">
-                                <label for="exampleInputUsername1">Alternativa correta</label>
-                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Alternativa correta">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputUsername1">Alternativa</label>
-                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Alternativa">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputUsername1">Alternativa</label>
-                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Alternativa(opicional)">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputUsername1">Alternativa</label>
-                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Alternativa(opicional)">
-                            </div>
-                            -->
                         </form>
                     </div>
                 </div>

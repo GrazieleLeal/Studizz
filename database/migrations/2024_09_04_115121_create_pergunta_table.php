@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('imagem', 255)->nullable();
             $table->text('pergunta');
             $table->integer('nivel');
-            $table->boolean('aprovada');
+            $table->boolean('aprovada')->nullable();
             $table->timestamps();
         });
     }

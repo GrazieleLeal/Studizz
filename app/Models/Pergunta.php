@@ -31,21 +31,32 @@ class Pergunta extends Model
         'aprovada'
     ];
 
-
-
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class,'usuario_id','id');
     }
 
-    public function alternativa(): HasMany
+    public function alternativa(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Alternativa::class,'pergunta_id','id');
     }
 
+
     public function pergunta_subcategoria(): BelongsTo
     {
         return $this->belongsTo(PerguntaSubcategoria::class,'pergunta_id','id');
+    }
+
+
+
+    public function getAprovadaBadgeAttribute(){
+        switch ($this->aprovada) {
+            case null:
+                return '<label class="badge badge-secondary">Em análise</label>';
+            case 0:
+                return '<label class="badge badge-danger">Reprovada</label>';
+            case 1:
+                return '<label class="badge badge-success">Aprovada</label>';
+        }
     }
 }
