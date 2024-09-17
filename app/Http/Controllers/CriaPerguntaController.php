@@ -9,13 +9,11 @@ use App\Models\PerguntaSubcategoria;
 
 use Illuminate\Http\Request;
 
-class CriaPerguntaController extends Controller
-{
+class CriaPerguntaController extends Controller{
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+    public function index(){
         //$data = Produto::latest()->paginate(5);//joga os ultimos 5 elementos em data
         //return view('produtos.index', compact('data'))->with('i', (request()->input('page', 1) - 1 * 5));
 
@@ -29,19 +27,16 @@ class CriaPerguntaController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
+    public function create(){
         $categorias = Categoria::all();
         $subcategorias = Subcategoria::all();
-
         return view('frontend.criaPergunta.create', compact('categorias','subcategorias'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         // Validar os dados de entrada
 
         $validatedData = $request->validate([
@@ -85,8 +80,7 @@ class CriaPerguntaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
+    public function show(string $id){
         $pergunta = Pergunta::find($id);
         $alternativas = $pergunta->alternativa;
         $niveis = [
@@ -109,16 +103,16 @@ class CriaPerguntaController extends Controller
     public function edit(string $id)
     {
         $pergunta = Pergunta::find($id);
+        $alternativas = Alternativa::where('pergunta_id', $id)->get();
         $categorias = Categoria::all();
         $subcategorias = Subcategoria::all();
-        return view('frontend.criaPergunta.edit', compact('pergunta','categorias','subcategorias'));
+        return view('frontend.criaPergunta.edit', compact('pergunta','alternativas','categorias','subcategorias'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
+    public function update(Request $request, string $id){
         // Validar os dados de entrada
 
         $validatedData = $request->validate([
@@ -175,8 +169,7 @@ class CriaPerguntaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
+    public function destroy(string $id){
         /*
         $pergunta->delete();
         $ps->delete();
@@ -201,5 +194,15 @@ class CriaPerguntaController extends Controller
             //return redirect()->route('criaPergunta.index')->with('error', 'Pergunta não encontrada');
         //}
 
+    }
+
+    public function getSubcategorias(Request $request){
+        $categoria_id = $request->input('categoria_id');
+        $subcategorias = Subcategoria::where('categoria_id', $categoria_id)->get();
+        return response()->json($subcategorias);
+    }
+    public function getSubcategoriasByCategoria($categoria_id){
+        $subcategorias = Subcategoria::where('categoria_id', $categoria_id)->get();
+        return response()->json($subcategorias);
     }
 }

@@ -24,10 +24,14 @@ class PerguntaSubcategoria extends Model
         'subcategoria_id'
     ];
 
-
+/*
     public function pergunta(): HasMany
     {
         return $this->hasMany(Pergunta::class,'pergunta_id','id');
+    }
+        */
+    public function pergunta(): \Illuminate\Database\Eloquent\Relations\BelongsToMany{
+        return $this->belongsToMany(Pergunta::class, 'pergunta_subcategoria', 'subcategoria_id', 'pergunta_id');
     }
 
     public function subcategoria(): HasMany

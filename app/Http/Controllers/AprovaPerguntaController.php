@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\Pergunta;
 
-class PerfilController extends Controller
+class AprovaPerguntaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index() 
     {
-        //
-
+        //$data = Pergunta::latest()->paginate(5);//joga os ultimos 5 elementos em data
+        $data = Pergunta::all();
+        return view('frontend.aprovaPergunta.index', compact('data'))->with('i', (request()->input('page', 1) - 1 * 5));
     }
 
     /**
@@ -37,8 +38,7 @@ class PerfilController extends Controller
      */
     public function show(string $id)
     {
-        $perfil = User::find($id);
-        return view('frontend.perfil.show', compact('perfil'));
+        //
     }
 
     /**
@@ -46,26 +46,15 @@ class PerfilController extends Controller
      */
     public function edit(string $id)
     {
-        $perfil = User::find($id);
-        return view('frontend.perfil.edit', compact('perfil'));
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    { 
-        $perfil = User::find($id);
-        if ($request->input('name') && $request->input('name') != $perfil->name) {
-            $perfil->name = $request->input('name');
-        }
-        if ($request->input('email') && $request->input('email') != $perfil->email) {
-            $perfil->email = $request->input('email');
-        }
-        $perfil->imagem = $request->input('imagem');
-        $perfil->save();
-
-        return redirect()->route('perfil.show', $id)->with('success', 'Perfil atualizado');
+    {
+        //
     }
 
     /**
@@ -75,6 +64,4 @@ class PerfilController extends Controller
     {
         //
     }
-
-
 }

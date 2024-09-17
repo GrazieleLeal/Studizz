@@ -47,10 +47,13 @@ class Pergunta extends Model
         return $this->belongsTo(PerguntaSubcategoria::class,'pergunta_id','id');
     }
 
-
-
+        /*
+    public function pergunta_subcategoria(): \Illuminate\Database\Eloquent\Relations\BelongsToMany{
+        return $this->belongsToMany(Subcategoria::class, 'pergunta_subcategoria', 'pergunta_id', 'subcategoria_id');
+    }
+*/
     public function getAprovadaBadgeAttribute(){
-        switch ($this->aprovada) {
+        switch (strval($this->aprovada)) {
             case null:
                 return '<label class="badge badge-secondary">Em análise</label>';
             case 0:

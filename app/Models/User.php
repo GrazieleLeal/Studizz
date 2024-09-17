@@ -47,7 +47,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function papel(): BelongsTo
+    public function papel()
     {
         return $this->belongsTo(Papel::class,'papel_id','id');
     }
@@ -56,7 +56,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Feedback::class,'usuario_id','id');
     }
-
+ 
     public function pergunta(): HasMany
     {
         return $this->hasMany(Pergunta::class,'usuario_id','id');

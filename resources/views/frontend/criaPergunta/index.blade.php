@@ -37,8 +37,8 @@
                                     @foreach ($data as $key => $value)
                                         <tr>
                                             <td>{{ \Str::limit($value->pergunta, 100) }}</td>
-                                            <td>2</td>
-                                            <td>{{ $value->created_at }}</td>
+                                            <td>{{ $value->alternativa->count() }}</td>
+                                            <td>{{ $value->created_at->format('d/m/Y') }}</td>
                                             <td>{!! $value->aprovada_badge !!}</td>
 
                                             <td>

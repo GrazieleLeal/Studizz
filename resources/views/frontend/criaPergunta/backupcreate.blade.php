@@ -33,10 +33,40 @@
                         <h4 class="card-title">Crie sua pergunta</h4>
                         <form class="forms-sample" action="{{ route('criaPergunta.store') }}" method="POST">
                             @csrf
+                            <!--eu tentando fgazer com o enzo-->
+                            <div class="form-group">
+                                <label for="categoria">Categoria</label>
+                                <select class="form-control" name="categoria_id" id="categoria">
+                                    @foreach($categorias as $categoria)
+                                        <option value="{{ $categoria->id }}">{{ $categoria->descricao }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="subcategoria">Subcategoria</label>
+                                <select class="form-control" name="subcategoria_id" id="subcategoria">
+                                    @foreach($subcategorias as $subcategoria)
+                                        <option value="{{ $subcategoria->id }}" {{ $subcategoria->categoria_id == $categoria->id ? 'selected' : '' }}>{{ $subcategoria->descricao }}</option>
+                                        {{-- tentei fazer que nem o enzo <option value="{{ $subcategoria->id }}" {{ $subcategoria->where(Request::input('categoria_id_hidden'), $categoria->id)->pluck('descricao')}}>{{ $subcategoria->descricao }}</option>--}}
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            @if(Request::input('categoria_id'))
+                                <script>
+                                    document.getElementById('subcategoria').style.display = 'block';
+                                </script>
+                            @endif
+                            {{--
+                                    select
+                                    option value={{$pergunta->id}}> {{ subcategoria->where('categoria_id', $categoria->id)->pluck('descricao') }}
+                                    option value={{$subcategoria->id}}> {{ subcategoria->where('categoriaId_selecionada', $categoria->id)->pluck('descricao') }}
+                            --}}
+
+                            <!--chat-->
                             <div class="form-group">
                                 <label for="categoria">Categoria</label>
                                 <select class="form-control" name="categoria_id" id="categoria" onchange="getSubcategorias(this.value)">
-                                    <option value=""></option>
                                     @foreach($categorias as $categoria)
                                         <option value="{{ $categoria->id }}">{{ $categoria->descricao }}</option>
                                     @endforeach
@@ -48,6 +78,26 @@
 
                                 </select>
                             </div>
+                            <script>
+                                // Array de subcategorias
+                                var subcategorias = [
+                                    @foreach($subcategorias as $subcategoria)
+                                        { id: {{ $subcategoria->id }}, descricao: '{{ $subcategoria->descricao }}', categoria_id: {{ $subcategoria->categoria_id }} },
+                                    @endforeach
+                                ];
+
+                                function getSubcategorias(categoria_id) {
+                                    // Limpa o select da subcategoria
+                                    $('#subcategoria').empty();
+
+                                    // Popula o select da subcategoria com as subcategorias correspondentes à categoria selecionada
+                                    $.each(subcategorias, function(index, subcategoria) {
+                                        if (subcategoria.categoria_id == categoria_id) {
+                                            $('#subcategoria').append('<option value="' + subcategoria.id + '">' + subcategoria.descricao + '</option>');
+                                        }
+                                    });
+                                }
+                            </script>
                             <div class="form-group">
                                 <label for="nivel">Nível</label>
                                 <select class="form-control" name="nivel" id="nivel">
@@ -105,26 +155,7 @@
 
 @section('scripts')
 
-<script>
-    // Array de subcategorias
-    var subcategorias = [
-        @foreach($subcategorias as $subcategoria)
-            { id: {{ $subcategoria->id }}, descricao: '{{ $subcategoria->descricao }}', categoria_id: {{ $subcategoria->categoria_id }} },
-        @endforeach
-    ];
 
-    function getSubcategorias(categoria_id) {
-        // Limpa o select da subcategoria
-        $('#subcategoria').empty();
-
-        // Popula o select da subcategoria com as subcategorias correspondentes à categoria selecionada
-        $.each(subcategorias, function(index, subcategoria) {
-            if (subcategoria.categoria_id == categoria_id) {
-                $('#subcategoria').append('<option value="' + subcategoria.id + '">' + subcategoria.descricao + '</option>');
-            }
-        });
-    }
-</script>
 
 
 

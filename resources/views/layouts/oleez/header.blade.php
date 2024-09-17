@@ -6,7 +6,7 @@
                 <nav class="-mx-3 flex flex-1 justify-end">
                     @auth
                       <a
-                            href="{{ route('perfil') }}"
+                            href="{{ route('perfil.show', auth()->user()->id) }}"
                             class="nav-text"
                         >
                             Perfil
@@ -59,7 +59,7 @@
                 <nav class="-mx-3 flex flex-1 justify-end">
                     @auth
                         <a
-                            href="{{ route('perfil') }}"
+                            href="{{ route('perfil.show', auth()->user()->id) }}"
                             class="nav-text"
                         >
                             Perfil

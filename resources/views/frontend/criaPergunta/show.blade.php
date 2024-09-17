@@ -29,7 +29,7 @@
                                 <label for="exampleInputUsername1">Nível</label>
                                 <input type="text" class="form-control" id="exampleInputUsername1" placeholder="{{ $niveis[$pergunta->nivel] }}" disabled>
                             </div>
-                            <a class="btn btn-secondary mr2" href="{{route('criaPergunta.index')}}">Voltar</a>
+                            {{--<a class="btn btn-secondary mr2" href="{{route('criaPergunta.index')}}">Voltar</a>--}}
                         </form>
                     </div>
                 </div>

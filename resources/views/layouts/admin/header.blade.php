@@ -6,12 +6,16 @@
         @if (Route::has('login'))
             <nav class="-mx-3 flex flex-1 justify-end">
                 @auth
-                    <a
-                        href="{{ url('/dashboard') }}"
-                        class="nav-text"
-                    >
-                        Dashboard
-                    </a>
+                <a
+                    href="{{ route('perfil.show', auth()->user()->id) }}"
+                    class="nav-text"
+                >
+                    Perfil
+                </a>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" style="border: none;background-color: white;display: inline;" class="nav-text">Desconectar</button>
+                </form>
                 @else
                     <a
                         href="{{ route('login') }}"
@@ -38,10 +42,10 @@
         <div class="collapse navbar-collapse" style="width: 40%;" id="oleezMainNav">
             <ul class="navbar-nav mx-auto mt-2 mt-lg-0 " style="width: 60%; ">
                 <li class="nav-item texto-preto ">
-                    <a class="texto-preto " id="inicio " href="{{route('admin.admin')}}">Início <span class="sr-only ">(current)</span></a>
+                    <a class="texto-preto " id="inicio " href="{{route('admin')}}">Início <span class="sr-only ">(current)</span></a>
                 </li>
                 <li class="nav-item texto-preto ">
-                    <a class="texto-preto " href="{{route('aprovarP')}}">Perguntas</a>
+                    <a class="texto-preto " href="{{route('aprova.index')}}">Perguntas</a>
                 </li>
                 <li class="nav-item texto-preto ">
                     <a class="texto-preto " href="../Regal/template/pages/admin/aprovarP.html ">Aprovadas</a>
@@ -55,17 +59,15 @@
             <nav class="-mx-3 flex flex-1 justify-end">
                 @auth
                     <a
-                        href="{{ route('perfil') }}"
+                        href="{{ route('perfil.show', auth()->user()->id) }}"
                         class="nav-text"
                     >
                         Perfil
                     </a>
-                    <a
-                        href="{{ route('login') }}"
-                        class="nav-text"
-                    >
-                        Desconectar
-                    </a>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" style="border: none;background-color: white;display: inline;" class="nav-text">Desconectar</button>
+                    </form>
                 @else
                     <a
                         href="{{ route('login') }}"
