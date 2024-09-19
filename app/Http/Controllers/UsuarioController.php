@@ -8,7 +8,7 @@ class UsuarioController extends Controller
 {
     public function index(){
         return 'index';
-    }
+    } 
 
     public function create(){
         return 'create';

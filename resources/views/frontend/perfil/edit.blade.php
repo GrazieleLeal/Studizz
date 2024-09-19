@@ -13,16 +13,16 @@
                         <ul class="list-group">
                             <li class="list-group-item text-muted">Atividade <i class="fa fa-dashboard fa-1x"></i></li>
                             <li class="list-group-item text-left"><span class="pull-left"><strong>Perguntas postadas</strong></span>
-                                <p class="pull-right">125</p>
+                                <p class="pull-right">{{ $perguntasCriadas }}</p>
                             </li>
                             <li class="list-group-item text-left"><span class="pull-left"><strong>Perguntas aprovadas</strong></span>
-                                <p class="pull-right">125</p>
+                                <p class="pull-right">{{ $perguntasAprovadas }}</p>
                             </li>
                             <li class="list-group-item text-left"><span class="pull-left"><strong>Perguntas reprovadas</strong></span>
-                                <p class="pull-right">125</p>
+                                <p class="pull-right">{{ $perguntasReprovadas }}</p>
                             </li>
                             <li class="list-group-item text-left"><span class="pull-left"><strong>Perguntas sendo avaliadas</strong></span>
-                                <p class="pull-right">125</p>
+                                <p class="pull-right">{{ $perguntasEmAnalise }}</p>
                             </li>
                         </ul>
                     </div>

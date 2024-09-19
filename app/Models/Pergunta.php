@@ -41,12 +41,15 @@ class Pergunta extends Model
         return $this->hasMany(Alternativa::class,'pergunta_id','id');
     }
 
-
+    /*
     public function pergunta_subcategoria(): BelongsTo
     {
         return $this->belongsTo(PerguntaSubcategoria::class,'pergunta_id','id');
     }
-
+    */
+    public function pergunta_subcategoria(){
+        return $this->hasMany(PerguntaSubcategoria::class, 'pergunta_id');
+    }
         /*
     public function pergunta_subcategoria(): \Illuminate\Database\Eloquent\Relations\BelongsToMany{
         return $this->belongsToMany(Subcategoria::class, 'pergunta_subcategoria', 'pergunta_id', 'subcategoria_id');

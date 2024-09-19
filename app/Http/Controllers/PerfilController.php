@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Pergunta;
 
 class PerfilController extends Controller
 {
@@ -38,7 +39,11 @@ class PerfilController extends Controller
     public function show(string $id)
     {
         $perfil = User::find($id);
-        return view('frontend.perfil.show', compact('perfil'));
+        $perguntasCriadas = Pergunta::where('users_id', $id)->count();
+        $perguntasAprovadas = Pergunta::where('users_id', $id)->where('aprovada', 1)->count();
+        $perguntasReprovadas = Pergunta::where('users_id', $id)->where('aprovada', 0)->count();
+        $perguntasEmAnalise = Pergunta::where('users_id', $id)->whereNull('aprovada')->count();
+        return view('frontend.perfil.show', compact('perfil','perguntasCriadas', 'perguntasAprovadas', 'perguntasReprovadas', 'perguntasEmAnalise'));
     }
 
     /**
@@ -47,14 +52,18 @@ class PerfilController extends Controller
     public function edit(string $id)
     {
         $perfil = User::find($id);
-        return view('frontend.perfil.edit', compact('perfil'));
+        $perguntasCriadas = Pergunta::where('users_id', $id)->count();
+        $perguntasAprovadas = Pergunta::where('users_id', $id)->where('aprovada', 1)->count();
+        $perguntasReprovadas = Pergunta::where('users_id', $id)->where('aprovada', 0)->count();
+        $perguntasEmAnalise = Pergunta::where('users_id', $id)->whereNull('aprovada')->count();
+        return view('frontend.perfil.edit', compact('perfil','perguntasCriadas', 'perguntasAprovadas', 'perguntasReprovadas', 'perguntasEmAnalise'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    { 
+    {
         $perfil = User::find($id);
         if ($request->input('name') && $request->input('name') != $perfil->name) {
             $perfil->name = $request->input('name');

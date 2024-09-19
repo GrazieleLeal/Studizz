@@ -48,10 +48,10 @@
                     <a class="texto-preto " href="{{route('aprova.index')}}">Perguntas</a>
                 </li>
                 <li class="nav-item texto-preto ">
-                    <a class="texto-preto " href="../Regal/template/pages/admin/aprovarP.html ">Aprovadas</a>
+                    <a class="texto-preto " href="{{route('revisaA.index')}}">Aprovadas</a>
                 </li>
                 <li class="nav-item texto-preto ">
-                    <a class="texto-preto com-margin" href="../Regal/template/pages/admin/aprovarP.html ">Recusadas</a>
+                    <a class="texto-preto com-margin" href="{{route('revisaR.index')}}">Reprovadas</a>
                 </li>
             </ul>
             <ul class="navbar-nav d-none d-lg-flex">

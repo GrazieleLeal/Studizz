@@ -44,7 +44,7 @@
                     <a class="texto-preto" href="{{route('index')}}">Início <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item texto-preto">
-                    <a class="texto-preto" href="{{route('categoria.index')}}">Quizzes</a>
+                    <a class="texto-preto" href="{{--{{route('categoria.index')}}--}}">Quizzes</a>
                 </li>
                 <li class="nav-item texto-preto">
                     <a class="texto-preto" href="{{route('criaPergunta.index')}}">Minhas perguntas</a>

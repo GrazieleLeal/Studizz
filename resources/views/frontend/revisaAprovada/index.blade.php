@@ -29,7 +29,7 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($data as $key => $value)
-                                                    @if ($value->aprovada === null)
+                                                    @if ($value->aprovada === 1)
                                                         @php
                                                             $value->load('pergunta_subcategoria.subcategoria.categoria');
                                                         @endphp
@@ -38,7 +38,7 @@
                                                             <td>{{ $value->alternativa->count() }}</td>
                                                             <td>{{ $value->created_at->format('d/m/Y') }}</td>
                                                             <td>
-                                                                <a class="btn btn-primary" href="{{ route('aprova.edit',$value->id) }}">Pergunta</a>
+                                                                <a class="btn btn-primary" href="{{ route('revisaA.edit',$value->id) }}">Pergunta</a>
                                                             </td>
                                                         </tr>
                                                     @endif

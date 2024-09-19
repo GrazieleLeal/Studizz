@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Categoria;
 
-class CategoriaController extends Controller
+class QuizController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */
+     */ 
     public function index()
     {
         //$data = Categoria::latest()->paginate(9);//joga os ultimos 9 elementos em data

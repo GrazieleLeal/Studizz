@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pergunta;
-use App\Models\Categoria;
-use App\Models\Subcategoria;
 use App\Models\PerguntaSubcategoria;
+use App\Models\Subcategoria;
+use App\Models\Categoria;
 
-class AprovaPerguntaController extends Controller
+class RevisaReprovadaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class AprovaPerguntaController extends Controller
         $data = Pergunta::with('pergunta_subcategoria.subcategoria.categoria')->get();
         //$data = Pergunta::all();
         $categorias = Categoria::all();
-        return view('frontend.aprovaPergunta.index', compact('data','categorias'))/*->with('i', (request()->input('page', 1) - 1 * 5))*/;
+        return view('frontend.revisaReprovada.index', compact('data','categorias'));
     }
 
     /**
@@ -43,6 +43,7 @@ class AprovaPerguntaController extends Controller
      */
     public function show(string $id)
     {
+        //
     }
 
     /**
@@ -63,24 +64,21 @@ class AprovaPerguntaController extends Controller
                 ->subcategoria_id
         );
         $categoria = Categoria::find($subcategoria->categoria_id);
-        return view('frontend.aprovaPergunta.edit', compact('pergunta', 'alternativas','niveis','categoria','subcategoria'));
+        return view('frontend.revisaReprovada.edit', compact('pergunta', 'alternativas','niveis','categoria','subcategoria'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id){
+    public function update(Request $request, string $id)
+    {
         $pergunta = Pergunta::find($id);
+
         if ($pergunta) {
-            $aprova = $request->input('aprova');
-            if ($aprova == 1) {
-                $pergunta->aprovada = 1;
-            } else {
-                $pergunta->aprovada = 0;
-            }
+            $pergunta->aprovada = null;
             $pergunta->save();
         }
-        return redirect()->route('aprova.index')->with('success', 'Produto atusalizado com sucesso');
+        return redirect()->route('revisaR.index')->with('success', 'Produto atusalizado com sucesso');
     }
 
     /**

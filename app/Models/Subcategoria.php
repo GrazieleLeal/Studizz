@@ -26,16 +26,12 @@ class Subcategoria extends Model
         'descricao',
     ];
 
-
-
-
-
-    public function categoria(): BelongsTo
+    public function categoria()
     {
         return $this->belongsTo(Categoria::class,'categoria_id','id');
     }
 
-    public function pergunta_subcategoria(): BelongsTo
+    public function pergunta_subcategoria()
     {
         return $this->belongsTo(PerguntaSubcategoria::class,'subcategoria_id','id');
     }

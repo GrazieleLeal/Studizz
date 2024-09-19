@@ -6,10 +6,12 @@
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <form class="forms-sample">
+                        <form class="forms-sample" action="{{ route('revisaA.update', $pergunta->id) }}" method="post">
+                            @csrf
+                            @method('PUT')
                             <div class="form-group">
                                 <label for="pergunta">Pergunta</label>
-                                <input type="text" class="form-control" id="pergunta" placeholder="{{$pergunta->pergunta}}" disabled>
+                                <input type="text" class="form-control" id="pergunta" placeholder="{{ $pergunta->pergunta }}" disabled>
                             </div>
                             <label for="alternativa">Alternativas</label>
                             @foreach($alternativas as $alternativa)
@@ -29,7 +31,9 @@
                                 <label for="exampleInputUsername1">Nível</label>
                                 <input type="text" class="form-control" id="exampleInputUsername1" placeholder="{{ $niveis[$pergunta->nivel] }}" disabled>
                             </div>
-                            {{--<a class="btn btn-secondary mr2" href="{{route('criaPergunta.index')}}">Voltar</a>--}}
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-secondary font-weight-bold">Mandar para análise</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -38,10 +42,10 @@
     </div>
     <!-- content-wrapper ends -->
     <!-- partial:../../partials/_footer.html -->
-    <footer class="footer">
-        <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © bootstrapdash.com 2020</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard templates</a> from Bootstrapdash.com</span>
+    <footer class="footer ">
+        <div class="d-sm-flex justify-content-center justify-content-sm-between ">
+            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block ">Copyright © bootstrapdash.com 2020</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center "> Free <a href="https://www.bootstrapdash.com/ " target="_blank ">Bootstrap dashboard templates</a> from Bootstrapdash.com</span>
         </div>
     </footer>
     <!-- partial -->
