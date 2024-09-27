@@ -3,19 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Pergunta;
+use App\Models\Alternativa;
 
 class QuizController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */ 
-    public function index()
-    {
-        //$data = Categoria::latest()->paginate(9);//joga os ultimos 9 elementos em data
-        //return view('frontend.categoria', compact('data'));
-        //->with('i', (request()->input('page', 1) - 1) * 5)
-        $data = Categoria::all();//joga todos os produtos da tabela em data
-        return view('frontend.categoria')->with('data', $data);
+     */
+    public function index(){
+        $request->validate([
+            'subcategorias' => 'required|array',
+            'niveis' => 'required|array',
+            'num_perguntas' => 'required|integer|min:1',
+        ]);
+
+        $subcategorias = $request->input('subcategorias');
+        $niveis = $request->input('niveis');
+        $numPerguntas = $request->input('num_perguntas');
+
+        return view('frontend.quiz.index'/*, compact('perguntas')*/);
     }
 
     /**
@@ -31,15 +38,33 @@ class QuizController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'subcategorias' => 'required|array',
+            'niveis' => 'required|array',
+            'num_perguntas' => 'required|integer|min:1',
+        ]);
+        $niveis = $request->input('niveis');
+        $subcategorias = $request->input('subcategorias');
+        $numPerguntas = $request->input('num_perguntas');
+
+        $perguntas = Pergunta::where('nivel', $niveis)
+        ->whereHas('pergunta_subcategoria', function ($query) use ($subcategorias) {
+            $query->whereIn('subcategoria_id', $subcategorias);
+        })
+        ->inRandomOrder()
+        ->take($numPerguntas)
+        ->get();
+
+        foreach ($perguntas as $pergunta) {
+            $pergunta->alternativas = Alternativa::where('pergunta_id', $pergunta->id)->get();
+        }
+        return view('frontend.quiz.index', compact('perguntas'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        //
+    public function show(string $id){
     }
 
     /**
@@ -53,9 +78,15 @@ class QuizController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request/*, string $id*/)
     {
-        //
+
+        $corretas = $request->input('corretas');
+        $incorretas = $request->input('incorretas');
+        $total = $corretas + $incorretas;
+        // Exibe a tela com os resultados
+        return view('frontend.quiz.update', compact('corretas', 'incorretas','total'));
+
     }
 
     /**
