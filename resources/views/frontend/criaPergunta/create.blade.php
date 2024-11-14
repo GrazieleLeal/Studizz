@@ -31,14 +31,14 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Crie sua pergunta</h4>
-                        <form class="forms-sample" action="{{ route('criaPergunta.store') }}" method="POST">
+                        <form class="forms-sample" action="{{ route('criaPergunta.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="categoria">Categoria</label>
                                 <select class="form-control" name="categoria_id" id="categoria" onchange="getSubcategorias(this.value)">
                                     <option value=""></option>
                                     @foreach($categorias as $categoria)
-                                        <option value="{{ $categoria->id }}">{{ $categoria->descricao }}</option>
+                                        <option value="{{ $categoria->id }}">{{ $categoria->categoria }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -62,7 +62,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="imagem">Adicione uma imagem</label>
-                                <input type="file" class="form-control text-center center-block file-upload" name="imagem" id="imagem">
+                                <input type="file" class="form-control text-center center-block file-upload" name="imagem_pergunta" id="imagem_pergunta">
                             </div>
 
                             @for($i = 0; $i < 5; $i++)

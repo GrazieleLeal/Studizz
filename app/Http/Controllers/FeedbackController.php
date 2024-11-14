@@ -5,29 +5,25 @@ use App\Models\Feedback;
 
 use Illuminate\Http\Request;
 
-class FeedbackController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
+class FeedbackController extends Controller{
+
+    public function index(){
+        if(auth()->user()->papel_id == 1){
+            $papel = auth()->user()->papel_id;
+            $data = Feedback::all();
+            return view('frontend.feedback.index', compact('data','papel'));
+        }else{
+            $papel = auth()->user()->papel_id;
+            $data = Feedback::where('usuario_id', auth()->id())->get();
+            return view('frontend.feedback.index', compact('data','papel'));
+        }
+    }
+
+    public function create(){
         return view('frontend.feedback.create');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('frontend.feedback.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $request->validate([
             'descricao' => 'required',
         ]);
@@ -39,50 +35,31 @@ class FeedbackController extends Controller
             'usuario_id' => auth()->user()->id
         ]);
 
-        return redirect()->route('feedback.index')->with('success', 'Feedback criado com sucesso');
+        return redirect()->route('feedback.create')->with('success', 'Feedback criado com sucesso');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        return view('feedback.show', compact('feedback'));
+    public function show(string $id){
+        $feedback = Feedback::find($id);
+        return view('frontend.feedback.show', compact('feedback'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        return view('feedback.edit', compact('feedback'));
+    public function edit(string $id){
+        $feedback =  Feedback::find($id);
+        return view('frontend.feedback.edit', compact('feedback'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
+    public function update(Request $request, string $id){
         $request->validate([
             'descricao' => 'required',
-
         ]);
-
-        //Produto::update($request->all());//pega todos os dados
-
-        Feedback::create([
-            'descricao' => $request["descricao"],
-            'usuario_id' => auth()->user()->id
-        ]);
-        return redirect()->route('feedback.index')->with('success', 'Produto atusalizado com sucesso');
+        $feedback = Feedback::find($id);
+        $feedback->descricao = $request->input('descricao');
+        $feedback->save();
+        return redirect()->route('feedback.index')->with('success', 'Feedback atualizado com sucesso');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        $produto->delete();
-        return redirect()->route('produtos.index')->with('success', 'Produto deletado com sucesso');
+    public function destroy(Feedback $feedback){
+        $feedback->delete();
+        return redirect()->route('feedback.index')->with('success', 'Feedback deletado com sucesso');
     }
 }

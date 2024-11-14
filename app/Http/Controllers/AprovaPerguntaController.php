@@ -8,13 +8,9 @@ use App\Models\Categoria;
 use App\Models\Subcategoria;
 use App\Models\PerguntaSubcategoria;
 
-class AprovaPerguntaController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
+class AprovaPerguntaController extends Controller{
+
+    public function index(){
         //$data = Pergunta::latest()->paginate(5);//joga os ultimos 5 elementos em data
         $data = Pergunta::with('pergunta_subcategoria.subcategoria.categoria')->get();
         //$data = Pergunta::all();
@@ -22,34 +18,19 @@ class AprovaPerguntaController extends Controller
         return view('frontend.aprovaPergunta.index', compact('data','categorias'))/*->with('i', (request()->input('page', 1) - 1 * 5))*/;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
+    public function create(){
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
+    public function show(string $id){
+        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
+    public function edit(string $id){
         $pergunta = Pergunta::find($id);
         $alternativas = $pergunta->alternativa;
         $niveis = [
@@ -66,9 +47,6 @@ class AprovaPerguntaController extends Controller
         return view('frontend.aprovaPergunta.edit', compact('pergunta', 'alternativas','niveis','categoria','subcategoria'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id){
         $pergunta = Pergunta::find($id);
         if ($pergunta) {
@@ -83,11 +61,7 @@ class AprovaPerguntaController extends Controller
         return redirect()->route('aprova.index')->with('success', 'Produto atusalizado com sucesso');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
+    public function destroy(string $id){
         //
     }
 }

@@ -10,35 +10,19 @@ use App\Models\PerguntaSubcategoria;
 use Illuminate\Http\Request;
 
 class CriaPerguntaController extends Controller{
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(){
-        //$data = Produto::latest()->paginate(5);//joga os ultimos 5 elementos em data
-        //return view('produtos.index', compact('data'))->with('i', (request()->input('page', 1) - 1 * 5));
-
-        //$data = Pergunta::all();//joga todos os produtos da tabela em data
-        //return view('frontend.criaPergunta.index', compact('data'));
-
         $data = Pergunta::where('users_id', auth()->id())->get();
         return view('frontend.criaPergunta.index', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(){
         $categorias = Categoria::all();
         $subcategorias = Subcategoria::all();
         return view('frontend.criaPergunta.create', compact('categorias','subcategorias'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request){
-        // Validar os dados de entrada
-
         $validatedData = $request->validate([
             'categoria_id' => 'required',
             'subcategoria_id' => 'required',
@@ -48,12 +32,22 @@ class CriaPerguntaController extends Controller{
             'alternativas.*.correta' => 'required|in:0,1',
         ]);
 
+        if($request->hasFile('imagem_pergunta')){
+            $filenameWithExt = $request->file('imagem_pergunta')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('imagem_pergunta')->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $path = $request->file('imagem_pergunta')->storeAs('imagem_pergunta',$fileNameToStore,'public');
+        } else {
+            $fileNameToStore = null;
+        }
+
         // Criar a pergunta
         $pergunta = new Pergunta();
         $pergunta->users_id = auth()->id();
         $pergunta->nivel = $request->input('nivel');
         $pergunta->pergunta = $request->input('pergunta');
-        $pergunta->imagem = $request->input('imagem');
+        $pergunta->imagem = $fileNameToStore;
         $pergunta->aprovada = null;
         $pergunta->save();
 
@@ -74,12 +68,9 @@ class CriaPerguntaController extends Controller{
             }
         }
         // Redirecionar para uma página de sucesso
-        return redirect()->route('criaPergunta.index')->with('success', 'Produto criado com sucesso');
+        return redirect()->route('criaPergunta.index')->with('success', 'Pergunta criada com sucesso');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id){
         $pergunta = Pergunta::find($id);
         $alternativas = $pergunta->alternativa;
@@ -97,24 +88,20 @@ class CriaPerguntaController extends Controller{
         return view('frontend.criaPergunta.show', compact('pergunta', 'alternativas','niveis','categoria','subcategoria'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
+    public function edit(string $id){
         $pergunta = Pergunta::find($id);
         $alternativas = Alternativa::where('pergunta_id', $id)->get();
+        $numAlternativa = $alternativas->count();
         $categorias = Categoria::all();
+        $subcategoriaSelecionada = $pergunta->pergunta_subcategoria->first()->subcategoria;
+        $categoriaSelecionada = $subcategoriaSelecionada->categoria;
         $subcategorias = Subcategoria::all();
-        return view('frontend.criaPergunta.edit', compact('pergunta','alternativas','categorias','subcategorias'));
+        return view('frontend.criaPergunta.edit', compact('pergunta','alternativas','categorias','subcategorias','numAlternativa','categoriaSelecionada','subcategoriaSelecionada'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id){
+        $pergunta = Pergunta::find($id);
         // Validar os dados de entrada
-
         $validatedData = $request->validate([
             'categoria_id' => 'required',
             'subcategoria_id' => 'required',
@@ -125,34 +112,40 @@ class CriaPerguntaController extends Controller{
             'alternativas.*.correta' => 'required|in:0,1',
         ]);
 
+        if($request->hasFile('imagem_pergunta')){
+            // Verifique se já existe uma imagem e exclua-a
+            if ($pergunta->imagem && $pergunta->imagem != 'noimage.png') {
+                unlink('storage/imagem_pergunta/'.$pergunta->imagem);
+            }
+            $filenameWithExt = $request->file('imagem_pergunta')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('imagem_pergunta')->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $path = $request->file('imagem_pergunta')->storeAs('imagem_pergunta', $fileNameToStore, 'public');
+        } else {
+            $fileNameToStore = $pergunta->imagem; // Mantém a imagem antiga se não houver nova
+        }
+
          // Atualizar a pergunta
         $pergunta->nivel = $request->input('nivel');
         $pergunta->pergunta = $request->input('pergunta');
-        $pergunta->imagem = $request->input('imagem');
+        $pergunta->imagem = $fileNameToStore;
         $pergunta->aprovada = null;
         $pergunta->save();
 
-        foreach ($alternativas = $request->input('alternativas') as $alternativa) {
+        foreach ($request->input('alternativas') as $alternativa) {
             if (!empty($alternativa['descricao'])) {
-                // Insere a alternativa no banco de dados
-                Alternativa::update([
-                    'pergunta_id' => $pergunta->id,
-                    'descricao' => $alternativa['descricao'],
-                    'correta' => $alternativa['correta'],
-                ]);
-            }
-        }
-
-        foreach ($alternativas = $request->input('alternativas') as $alternativa) {
-            if (!empty($alternativa['descricao'])) {
-                // Atualizar a alternativa existente ou criar uma nova
+                // Verifica se a alternativa já existe
                 $alternativaExistente = Alternativa::where('pergunta_id', $pergunta->id)
                     ->where('descricao', $alternativa['descricao'])
                     ->first();
+
                 if ($alternativaExistente) {
+                    // Atualiza a alternativa existente
                     $alternativaExistente->correta = $alternativa['correta'];
                     $alternativaExistente->save();
                 } else {
+                    // Cria uma nova alternativa
                     Alternativa::create([
                         'pergunta_id' => $pergunta->id,
                         'descricao' => $alternativa['descricao'],
@@ -160,22 +153,14 @@ class CriaPerguntaController extends Controller{
                     ]);
                 }
             }
+
         }
 
         // Redirecionar para uma página de sucesso
-        return redirect()->route('criaPergunta.index')->with('success', 'Produto criado com sucesso');
+        return redirect()->route('criaPergunta.index')->with('success', 'Pergunta atualizada com sucesso');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id){
-        /*
-        $pergunta->delete();
-        $ps->delete();
-        $alternativa->delete();
-        return redirect()->route('criaPergunta.index')->with('success', 'Produto deletado com sucesso');
-        */
 
         $pergunta = Pergunta::find($id);
         //if ($pergunta) {
@@ -185,14 +170,10 @@ class CriaPerguntaController extends Controller{
                     $alternativa->delete();
                 }
             }
-
             PerguntaSubcategoria::where('pergunta_id', $pergunta->id)->delete();
 
             $pergunta->delete();
             return redirect()->route('criaPergunta.index')->with('success', 'Pergunta deletada com sucesso');
-        //} else {
-            //return redirect()->route('criaPergunta.index')->with('error', 'Pergunta não encontrada');
-        //}
 
     }
 

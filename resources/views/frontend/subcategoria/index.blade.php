@@ -9,14 +9,14 @@
                         <table style="width:90%; margin-bottom:3%;">
                             <tr>
                                 <th>
-                                    <h2>Crie categorias</h2>
+                                    <h2>Crie subcategorias para {{$categoria->categoria}}</h2>
                                 </th>
                                 <th>
-                                    <a href="{{route('categoria.create')}}" class="btn btn-primary font-weight-bold " id="crie">Crie</a>
+                                    <a href="{{ route('subcategoria.create', $id) }}" class="btn btn-primary font-weight-bold " id="crie">Crie</a>
                                 </th>
                             </tr>
                         </table>
-                        <h4 class="card-title ">Categorias criadas</h4>
+                        <h4 class="card-title ">Subcategorias criadas</h4>
                         <div class="table-responsive ">
                             @if ($message = Session::get('success'))
                                 <div class="alert alert-success">
@@ -26,31 +26,23 @@
                             <table class="table ">
                                 <thead>
                                     <tr>
-                                        <td>Imagem</td>
-                                        <th>Categoria</th>
-                                        <th>Descrição</th>
+                                        <th>Nome</th>
                                         <th>Criado em</th>
-                                        <th>Número de subcategorias</th>
                                         <th><!--Aqui é o ver pergunta, edita e deleta--></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($data as $key => $value)
                                         <tr>
-                                            <td><img src="storage/imagem_categoria/{{$value->imagem}}" style="width:100%; border-radius: 0;" alt="{{$value->categoria}}"></td>
-                                            <td>{{ $value->categoria }}</td>
-                                            <td>{{ \Str::limit($value->descricao, 100) }}</td>
+                                            <td>{{ $value->descricao }}</td>
                                             <td>{{ $value->created_at->format('d/m/Y') }}</td>
-                                            <td>{{ $value->subcategoria->count() }}</td>
-
                                             <td>
-                                                <form action="{{ route('categoria.destroy',$value->id) }}" method="POST">
-                                                    <a class="btn btn-primary" href="{{ route('categoria.show',$value->id) }}">Categoria</a>
-                                                    <a class="btn btn-info" href="{{ route('categoria.edit',$value->id) }}">Editar</a>
+                                                <form action="{{ route('subcategoria.destroy', ['id' => $value->id, 'categoria_id' => $id]) }}" method="POST">
+                                                    <a class="btn btn-primary" href="{{ route('subcategoria.show',['id' => $value->id, 'categoria_id' => $id]) }}">Subcategoria</a>
+                                                    <a class="btn btn-info" href="{{ route('subcategoria.edit',['id' => $value->id, 'categoria_id' => $id]) }}">Editar</a>
                                                     @csrf<!--token que so aceita coisas que vem dele proprio-->
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Deletar</button>
-                                                    <a class="btn btn-secondary" href="{{ route('subcategoria.index', ['id' => $value->id]) }}">Subcategorias</a>
                                                 </form>
                                             </td>
                                         </tr>

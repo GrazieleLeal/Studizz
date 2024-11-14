@@ -12,7 +12,7 @@
                                         <select class="form-control" name="categoria_id" id="categoria" onchange="getPerguntas(this.value)">
                                             <option value=""></option>
                                             @foreach($categorias as $categoria)
-                                                <option value="{{ $categoria->id }}">{{ $categoria->descricao }}</option>
+                                                <option value="{{ $categoria->id }}">{{ $categoria->categoria }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -44,6 +44,16 @@
                                                     @endif
                                                 @endforeach
                                             </tbody>
+                                        </table>
+                                        <table style="width:90%; margin-bottom:3%;" class="mt-5">
+                                            <tr>
+                                                <th>
+                                                    <a href="{{route('revisaA.index')}}" class="btn btn-secondary font-weight-bold ml-5 float-left" id="revisaA">Revisar perguntas aprovadas</a>
+                                                </th>
+                                                <th>
+                                                    <a href="{{route('revisaR.index')}}" class="btn btn-secondary font-weight-bold mr-5 float-right" id="revisaR">Revisar perguntas reprovadas</a>
+                                                </th>
+                                            </tr>
                                         </table>
                                     </div>
                                 </div>

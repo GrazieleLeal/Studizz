@@ -9,7 +9,12 @@
                 <input type="hidden" name="corretas" id="corretas" value="0">
                 <input type="hidden" name="incorretas" id="incorretas" value="0">
                 @foreach($perguntas as $pergunta)
-                    <h3 class="pergunta card p-5" id="perguntaQuizz">{{ $pergunta->pergunta }}</h3>
+                    <div class="card">
+                        <h3 class="pergunta p-5" id="perguntaQuizz">{{ $pergunta->pergunta }}</h3>
+                        @if ($pergunta->imagem != null)
+                        <img src="{{ asset('storage/imagem_pergunta/' . $pergunta->imagem) }}" class="mx-auto d-block" style="width:90%;">
+                        @endif
+                    </div>
                     <div class="mt-5 mb-3">
                     @php
                         $alternativas = $pergunta->alternativas->all();

@@ -1,8 +1,6 @@
 @extends('layouts.oleez.oleez')
 @section('main')
 
-
-
 <div class="container ">
     <h1 class="oleez-page-title wow fadeInUp ">Feedbacks</h1>
     <div class="row "  style="margin-bottom: 15%;">
@@ -15,6 +13,7 @@
                 </div>
                 <button type="submit " class="btn btn-submit ">Enviar</button>
             </form>
+            <a class="btn btn-submit mr2 mt-4" href="{{route('feedback.index')}}">Ver meus feedbacks</a>
         </div>
     </div>
 </div>

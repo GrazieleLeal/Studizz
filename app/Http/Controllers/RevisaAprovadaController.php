@@ -8,49 +8,26 @@ use App\Models\PerguntaSubcategoria;
 use App\Models\Subcategoria;
 use App\Models\Categoria;
 
-class RevisaAprovadaController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //$data = Pergunta::latest()->paginate(5);//joga os ultimos 5 elementos em data
+class RevisaAprovadaController extends Controller{
+    public function index(){
         $data = Pergunta::with('pergunta_subcategoria.subcategoria.categoria')->get();
-        //$data = Pergunta::all();
         $categorias = Categoria::all();
         return view('frontend.revisaAprovada.index', compact('data','categorias'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
+    public function create(){
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
+    public function show(string $id){
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
+    public function edit(string $id){
         $pergunta = Pergunta::find($id);
         $alternativas = $pergunta->alternativa;
         $niveis = [
@@ -67,11 +44,7 @@ class RevisaAprovadaController extends Controller
         return view('frontend.revisaAprovada.edit', compact('pergunta', 'alternativas','niveis','categoria','subcategoria'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
+    public function update(Request $request, string $id){
         $pergunta = Pergunta::find($id);
 
         if ($pergunta) {
@@ -81,11 +54,7 @@ class RevisaAprovadaController extends Controller
         return redirect()->route('revisaA.index')->with('success', 'Produto atusalizado com sucesso');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
+    public function destroy(string $id){
         //
     }
 }

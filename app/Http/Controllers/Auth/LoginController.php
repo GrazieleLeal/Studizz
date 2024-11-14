@@ -24,7 +24,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         if ($user->papel->descricao === 'admin') {
-            return redirect()->route('admin');
+            return redirect()->route('admin.index');
         } elseif ($user->papel->descricao === 'comum') {
             return redirect()->route('index');
         }

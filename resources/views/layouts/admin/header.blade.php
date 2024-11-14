@@ -1,6 +1,6 @@
 <header class="oleez-header">
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" style="width: 10%;" href="index.html"><img src="https://i.postimg.cc/QdqPyYSf/logo.png" class="imagem" style="width: 45%;" alt="Oleez"></a>
+        <a class="navbar-brand" style="width: 10%;" href="{{route('admin.index')}}"><img src="https://i.postimg.cc/QdqPyYSf/logo.png" class="imagem" style="width: 45%;" alt="Oleez"></a>
 
         <ul class="nav nav-actions d-lg-none ml-auto" style="width: 18%; margin-top: 2%;">
         @if (Route::has('login'))
@@ -42,16 +42,16 @@
         <div class="collapse navbar-collapse" style="width: 40%;" id="oleezMainNav">
             <ul class="navbar-nav mx-auto mt-2 mt-lg-0 " style="width: 60%; ">
                 <li class="nav-item texto-preto ">
-                    <a class="texto-preto " id="inicio " href="{{route('admin')}}">Início <span class="sr-only ">(current)</span></a>
+                    <a class="texto-preto " id="inicio " href="{{route('admin.index')}}">Início <span class="sr-only ">(current)</span></a>
                 </li>
                 <li class="nav-item texto-preto ">
                     <a class="texto-preto " href="{{route('aprova.index')}}">Perguntas</a>
                 </li>
                 <li class="nav-item texto-preto ">
-                    <a class="texto-preto " href="{{route('revisaA.index')}}">Aprovadas</a>
+                    <a class="texto-preto com-margin" href="{{route('categoria.index')}}">Categorias</a>
                 </li>
                 <li class="nav-item texto-preto ">
-                    <a class="texto-preto com-margin" href="{{route('revisaR.index')}}">Reprovadas</a>
+                    <a class="texto-preto com-margin" href="{{route('feedback.index')}}">Feedbacks</a>
                 </li>
             </ul>
             <ul class="navbar-nav d-none d-lg-flex">

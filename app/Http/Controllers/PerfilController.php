@@ -6,38 +6,21 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Pergunta;
 
-class PerfilController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
+class PerfilController extends Controller{
+    public function index(){
         //
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
+    public function create(){
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
+    public function show(string $id){
         $perfil = User::find($id);
         $perguntasCriadas = Pergunta::where('users_id', $id)->count();
         $perguntasAprovadas = Pergunta::where('users_id', $id)->where('aprovada', 1)->count();
@@ -46,11 +29,7 @@ class PerfilController extends Controller
         return view('frontend.perfil.show', compact('perfil','perguntasCriadas', 'perguntasAprovadas', 'perguntasReprovadas', 'perguntasEmAnalise'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
+    public function edit(string $id){
         $perfil = User::find($id);
         $perguntasCriadas = Pergunta::where('users_id', $id)->count();
         $perguntasAprovadas = Pergunta::where('users_id', $id)->where('aprovada', 1)->count();
@@ -59,29 +38,38 @@ class PerfilController extends Controller
         return view('frontend.perfil.edit', compact('perfil','perguntasCriadas', 'perguntasAprovadas', 'perguntasReprovadas', 'perguntasEmAnalise'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $perfil = User::find($id);
+    public function update(Request $request, string $id){
+        $perfil = User::find($id);$perfil = User::find($id);
         if ($request->input('name') && $request->input('name') != $perfil->name) {
             $perfil->name = $request->input('name');
         }
         if ($request->input('email') && $request->input('email') != $perfil->email) {
             $perfil->email = $request->input('email');
         }
-        $perfil->imagem = $request->input('imagem');
-        $perfil->save();
 
+        if($request->hasFile('imagem_perfil')){
+            $filenameWithExt = $request->file('imagem_perfil')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('imagem_perfil')->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $path = $request->file('imagem_perfil')->storeAs('imagem_perfil',$fileNameToStore,'public');
+        } else {
+            if (!$perfil->imagem) {
+                $perfil->imagem = 'noimage.png';
+            }
+        }
+
+        if($perfil->imagem != null){
+            unlink('storage/imagem_perfil/'.$perfil->imagem);
+        }
+
+        $perfil->imagem = $fileNameToStore;
+
+        $perfil->save();
         return redirect()->route('perfil.show', $id)->with('success', 'Perfil atualizado');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
+    public function destroy(string $id){
         //
     }
 

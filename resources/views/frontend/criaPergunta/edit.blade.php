@@ -6,25 +6,51 @@
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <form class="forms-sample" action="{{ route('criaPergunta.update',$pergunta->id)}}" method="post">
+                        <form class="forms-sample" action="{{ route('criaPergunta.update',$pergunta->id)}}" method="post" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="pergunta">Pergunta</label>
-                                <input type="text" class="form-control" id="pergunta" value="{{$pergunta->pergunta}}" >
-                            </div>
-                            <label for="exampleInputUsername1">Alternativa</label>
-                            @foreach($alternativas as $alternativa)
+                                <input type="text" class="form-control" id="pergunta" value="{{$pergunta->pergunta}}" name="pergunta">
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="alternativa-{{ $alternativa->id }}" value="{{ $alternativa->descricao }}" >
+                                    @if ($pergunta->imagem != null)
+                                    <label for="pergunta">Imagem antiga</label>
+                                    <img src="{{ asset('storage/imagem_pergunta/' . $pergunta->imagem) }}" alt="imagem categoria" class="testimonial-card-img mt-3 mb-3" style="display: block; margin: 0 auto; ">
+                                    @endif
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="imagem">Adicione uma imagem</label>
+                                <input type="file" class="form-control text-center center-block file-upload" name="imagem_pergunta" id="imagem_pergunta">
+                            </div>
+
+                            <label for="exampleInputUsername1">Alternativas</label>
+                            @foreach ($alternativas as $index => $alternativa)
+                                @if($index == 0)
+                                    <!-- Alternativa correta -->
+                                    <label for="exampleInputUsername1">Correta</label>
+                                    <input type="text" name="alternativas[{{ $index }}][descricao]" class="form-control"  id="alternativaC" value="{{$alternativa->descricao}}" required>
+                                    <div class="form-group">
+                                        <input type="hidden" name="alternativas[{{ $index }}][correta]" value="1"> <!-- Alternativa correta -->
+                                    </div>
+                                @else
+                                    <!-- Alternativa incorreta -->
+                                    <label for="exampleInputUsername1">Incorreta</label>
+                                    <input type="text" name="alternativas[{{ $index }}][descricao]" class="form-control"  id="alternativaE" value="{{$alternativa->descricao}}">
+                                    <div class="form-group">
+                                        <input type="hidden" name="alternativas[{{ $index }}][correta]" value="0"> <!-- Alternativa errada -->
+                                    </div>
+                                @endif
                             @endforeach
 
                             <div class="form-group">
                                 <label for="categoria">Categoria</label>
                                 <select class="form-control" name="categoria_id" id="categoria" onchange="getSubcategorias(this.value)">
+                                    <option value="{{ $categoriaSelecionada->id }}">{{ $categoriaSelecionada->categoria }}</option>
                                     @foreach($categorias as $categoria)
-                                        <option value="{{ $categoria->id }}">{{ $categoria->descricao }}</option>
+                                    @if ($categoria != $categoriaSelecionada)
+                                        <option value="{{ $categoria->id }}">{{ $categoria->categoria }}</option>
+                                    @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -34,7 +60,6 @@
 
                                 </select>
                             </div>
-
 
                             <div class="form-group">
                                 <label for="nivel">Nível</label>
@@ -73,16 +98,34 @@
         @endforeach
     ];
 
+    // ID da subcategoria selecionada
+    var subcategoriaSelecionadaId = {{ $subcategoriaSelecionada->id }};
+
     function getSubcategorias(categoria_id) {
         // Limpa o select da subcategoria
-        $('#subcategoria').empty();
+        var subcategoriaSelect = document.getElementById('subcategoria');
+        subcategoriaSelect.innerHTML = ''; // Limpa as opções existentes
 
         // Popula o select da subcategoria com as subcategorias correspondentes à categoria selecionada
-        $.each(subcategorias, function(index, subcategoria) {
+        subcategorias.forEach(function(subcategoria) {
             if (subcategoria.categoria_id == categoria_id) {
-                $('#subcategoria').append('<option value="' + subcategoria.id + '">' + subcategoria.descricao + '</option>');
+                var option = document.createElement('option');
+                option.value = subcategoria.id;
+                option.textContent = subcategoria.descricao;
+
+                // Define a subcategoria selecionada
+                if (subcategoria.id === subcategoriaSelecionadaId) {
+                    option.selected = true; // Marca como selecionada
+                }
+
+                subcategoriaSelect.appendChild(option);
             }
         });
     }
+
+    // Chama a função para preencher as subcategorias ao carregar a página
+    document.addEventListener('DOMContentLoaded', function() {
+        getSubcategorias({{ $categoriaSelecionada->id }});
+    });
 </script>
 @endsection

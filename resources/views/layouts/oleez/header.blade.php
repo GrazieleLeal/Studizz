@@ -1,6 +1,6 @@
 <header class="oleez-header">
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" style="width: 10%;" href="index.html"><img src="https://i.postimg.cc/QdqPyYSf/logo.png" class="imagem" style="width: 45%;" alt="Oleez"></a>
+        <a class="navbar-brand" style="width: 10%;" href="{{route('index')}}"><img src="https://i.postimg.cc/QdqPyYSf/logo.png" class="imagem" style="width: 45%;" alt="Oleez"></a>
         <ul class="nav nav-actions d-lg-none ml-auto" style="width: 18%; margin-top: 2%;">
             @if (Route::has('login'))
                 <nav class="-mx-3 flex flex-1 justify-end">
@@ -44,7 +44,7 @@
                     <a class="texto-preto" href="{{route('index')}}">Início <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item texto-preto">
-                    <a class="texto-preto" href="{{route('categoria.index')}}">Quizzes</a>
+                <a class="texto-preto" href="{{route('opcao.index')}}">Quizzes</a>
                 </li>
                 <li class="nav-item texto-preto">
                     <a class="texto-preto" href="{{route('criaPergunta.index')}}">Minhas perguntas</a>

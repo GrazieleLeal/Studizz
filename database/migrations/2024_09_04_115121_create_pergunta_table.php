@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('users_id');
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('imagem', 255)->nullable();
+            $table->text('imagem')->nullable();
             $table->text('pergunta');
             $table->integer('nivel');
             $table->boolean('aprovada')->nullable();

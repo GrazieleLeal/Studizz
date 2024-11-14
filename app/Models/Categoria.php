@@ -25,10 +25,7 @@ class Categoria extends Model
         'descricao'
     ];
 
-
-
-
-    public function subcategoria(): HasMany
+    public function subcategoria()
     {
         return $this->hasMany(Subcategoria::class,'categoria_id','id');
     }

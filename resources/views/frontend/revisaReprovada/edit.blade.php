@@ -13,6 +13,12 @@
                                 <label for="pergunta">Pergunta</label>
                                 <input type="text" class="form-control" id="pergunta" placeholder="{{ $pergunta->pergunta }}" disabled>
                             </div>
+                            @if ($pergunta->imagem == null)
+
+                            @else
+                            <img src="{{ asset('storage/imagem_pergunta/' . $pergunta->imagem) }}" alt="imagem categoria" class="testimonial-card-img" style="display: block; margin: 0 auto; ">
+                            <br><br>
+                            @endif
                             <label for="alternativa">Alternativas</label>
                             @foreach($alternativas as $alternativa)
                                 <div class="form-group">
@@ -21,7 +27,7 @@
                             @endforeach
                             <div class="form-group">
                                 <label for="exampleInputUsername1">Categoria</label>
-                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="{{ $categoria->descricao }}" disabled>
+                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="{{ $categoria->categoria }}" disabled>
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputUsername1">Subcategoria</label>

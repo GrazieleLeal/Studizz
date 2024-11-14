@@ -6,11 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Pergunta;
 use App\Models\Alternativa;
 
-class QuizController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
+class QuizController extends Controller{
+
     public function index(){
         $request->validate([
             'subcategorias' => 'required|array',
@@ -24,20 +21,11 @@ class QuizController extends Controller
 
         return view('frontend.quiz.index'/*, compact('perguntas')*/);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
+    public function create(){
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $request->validate([
             'subcategorias' => 'required|array',
             'niveis' => 'required|array',
@@ -47,9 +35,10 @@ class QuizController extends Controller
         $subcategorias = $request->input('subcategorias');
         $numPerguntas = $request->input('num_perguntas');
 
-        $perguntas = Pergunta::where('nivel', $niveis)
+        $perguntas = Pergunta::whereIn('nivel', $niveis) // filtrar por níveis selecionados
+        ->where('aprovada', 1) // filtrar apenas perguntas aprovadas
         ->whereHas('pergunta_subcategoria', function ($query) use ($subcategorias) {
-            $query->whereIn('subcategoria_id', $subcategorias);
+            $query->whereIn('subcategoria_id', $subcategorias); // filtrar por subcategorias selecionadas
         })
         ->inRandomOrder()
         ->take($numPerguntas)
@@ -60,40 +49,23 @@ class QuizController extends Controller
         }
         return view('frontend.quiz.index', compact('perguntas'));
     }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id){
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request/*, string $id*/)
-    {
+    public function edit(string $id){
+        //
+    }
 
+    public function update(Request $request, string $id){
         $corretas = $request->input('corretas');
         $incorretas = $request->input('incorretas');
         $total = $corretas + $incorretas;
         // Exibe a tela com os resultados
         return view('frontend.quiz.update', compact('corretas', 'incorretas','total'));
-
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
+    public function destroy(string $id){
         //
     }
 }

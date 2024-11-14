@@ -8,55 +8,32 @@
                     <h2 class="section-title ">Feedbacks</h2>
                     <p class="section-subtitle ">dos usuários</p>
                 </div>
-                <div class="testimonial-carousel-navbtn-wrapper "></div>
+                <div class="testimonial-carousel-navbtn-wrapper ">
+                    
+                </div>
             </div>
             <div class="landing-testimonial-carousel wow fadeInUp ">
-                <div class="landing-testimonial-card ">
-                    <div class="media ">
-                        <img src="assets/images/Client_1@2x.jpg " alt="client " class="testimonial-card-img ">
-                        <div class="media-body ">
-                            <p class="testimonial-card-content ">
-                                The revulsion in our feelings was therefore all the greater when the car suddenly escaped from this height of desolation, and a magnificent prospect burst upon our view.
-                            </p>
-                            <h6 class="testimonial-card-name ">Winnie Warner</h6>
+                @foreach($feedback as $feedback)
+                    <div class="landing-testimonial-card ">
+                        <div class="media ">
+                            @if ($feedback->user->imagem== null)
+                            <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="testimonial-card-img " id="avatar" alt="avatar">
+                            @else
+                            <img src="{{ asset('storage/imagem_perfil/' . $feedback->user->imagem) }}" alt="imagem categoria" class="testimonial-card-img ">
+                            @endif
+                            {{--
+                            <img src="{{ asset('storage/' . $feedback->usuario->imagem) }}" alt="client " class="testimonial-card-img ">
+                            --}}
+                            <div class="media-body ">
+                                <p class="testimonial-card-content ">
+                                    {{ $feedback->descricao }}
+                                </p>
+                                <h6 class="testimonial-card-name ">{{ $feedback->user->name }}</h6>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="landing-testimonial-card ">
-                    <div class="media ">
-                        <img src="assets/images/Client_2@2x.jpg " alt="client " class="testimonial-card-img ">
-                        <div class="media-body ">
-                            <p class="testimonial-card-content ">
-                                The revulsion in our feelings was therefore all the greater when the car suddenly escaped from this height of desolation, and a magnificent prospect burst upon our view.
-                            </p>
-                            <h6 class="testimonial-card-name ">Wesley Ford</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="landing-testimonial-card ">
-                    <div class="media ">
-                        <img src="assets/images/Client_3@2x.jpg " alt="client " class="testimonial-card-img ">
-                        <div class="media-body ">
-                            <p class="testimonial-card-content ">
-                                The revulsion in our feelings was therefore all the greater when the car suddenly escaped from this height of desolation, and a magnificent prospect burst upon our view.
-                            </p>
-                            <h6 class="testimonial-card-name ">Winnie Warner</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="landing-testimonial-card ">
-                    <div class="media ">
-                        <img src="assets/images/Client_4@2x.jpg " alt="client " class="testimonial-card-img ">
-                        <div class="media-body ">
-                            <p class="testimonial-card-content ">
-                                The revulsion in our feelings was therefore all the greater when the car suddenly escaped from this height of desolation, and a magnificent prospect burst upon our view.
-                            </p>
-                            <h6 class="testimonial-card-name ">Wesley Ford</h6>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
-
         </div>
     </div>
 </section>

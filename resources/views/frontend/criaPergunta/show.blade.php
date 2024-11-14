@@ -9,7 +9,12 @@
                         <form class="forms-sample">
                             <div class="form-group">
                                 <label for="pergunta">Pergunta</label>
-                                <input type="text" class="form-control" id="pergunta" placeholder="{{$pergunta->pergunta}}" disabled>
+                                <input type="text" class="form-control" id="pergunta" placeholder="{{ $pergunta->pergunta }}" disabled>
+                                <div class="form-group">
+                                    @if ($pergunta->imagem != null)
+                                    <img src="{{ asset('storage/imagem_pergunta/' . $pergunta->imagem) }}" alt="imagem categoria" class="testimonial-card-img mt-3 mb-3" style="display: block; margin: 0 auto; ">
+                                    @endif
+                                </div>
                             </div>
                             <label for="alternativa">Alternativas</label>
                             @foreach($alternativas as $alternativa)

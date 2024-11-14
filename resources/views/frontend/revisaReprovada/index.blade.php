@@ -16,7 +16,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <h4 class="card-title">Perguntas para aprovar</h4>
+                                    <h4 class="card-title">Perguntas reprovadas</h4>
                                     <div class="table-responsive">
                                         <table class="table" id="tabela-perguntas">
                                             <thead>
@@ -45,6 +45,9 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        <div class="form-group mt-5">
+                                            <a href="{{route('aprova.index')}}" class="btn btn-secondary font-weight-bold">Voltar</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

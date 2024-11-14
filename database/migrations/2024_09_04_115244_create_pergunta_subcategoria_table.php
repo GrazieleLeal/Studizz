@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pergunta_subcategoria', function (Blueprint $table) {
-            $table->unsignedBigInteger('subcategoria_id');
-            $table->foreign('subcategoria_id')->references('id')->on('subcategoria')->onDelete('cascade');
             $table->unsignedBigInteger('pergunta_id');
             $table->foreign('pergunta_id')->references('id')->on('pergunta')->onDelete('cascade');
+            $table->unsignedBigInteger('subcategoria_id');
+            $table->foreign('subcategoria_id')->references('id')->on('subcategoria')->onDelete('cascade');
+            $table->primary(['pergunta_id', 'subcategoria_id']);
             $table->timestamps();
         });
     }

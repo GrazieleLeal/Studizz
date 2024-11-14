@@ -5,7 +5,11 @@
                 <div class="col-sm-3">
                     <!--left col-->
                     <div class="text-center" id="foto-perfil">
+                        @if ($perfil->imagem == null)
                         <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" id="avatar" alt="avatar">
+                        @else
+                        <img src="{{ asset('storage/imagem_perfil/' . $perfil->imagem) }}" class="avatar img-circle img-thumbnail" id="avatar" alt="avatar">
+                        @endif
                     </div>
                     </hr><br>
                     <ul class="list-group">
@@ -60,7 +64,7 @@
                     <!--/tab-pane-->
                 </div>
                 <!--/tab-content-->
-            </div>
+            </div> 
             <!--/col-9-->
         </div>
 @endsection

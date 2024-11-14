@@ -6,17 +6,11 @@
             <div class="col-lg-12 grid-margin stretch-card ">
                 <div class="card ">
                     <div class="card-body ">
-                        <table style="width:90%; margin-bottom:3%;">
-                            <tr>
-                                <th>
-                                    <h2>Crie categorias</h2>
-                                </th>
-                                <th>
-                                    <a href="{{route('categoria.create')}}" class="btn btn-primary font-weight-bold " id="crie">Crie</a>
-                                </th>
-                            </tr>
-                        </table>
-                        <h4 class="card-title ">Categorias criadas</h4>
+                        @if ($papel ==  1)
+                        <h4 class="card-title ">Feedbacks dos usuários</h4>
+                        @else
+                        <h4 class="card-title ">Seus Feedbacks</h4>
+                        @endif
                         <div class="table-responsive ">
                             @if ($message = Session::get('success'))
                                 <div class="alert alert-success">
@@ -26,35 +20,36 @@
                             <table class="table ">
                                 <thead>
                                     <tr>
-                                        <td>Imagem</td>
-                                        <th>Categoria</th>
-                                        <th>Descrição</th>
-                                        <th>Criado em</th>
-                                        <th>Número de subcategorias</th>
+                                        <th>Feedback</th>
                                         <th><!--Aqui é o ver pergunta, edita e deleta--></th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @if ($papel ==  1)
                                     @foreach ($data as $key => $value)
                                         <tr>
-                                            <td><img src="storage/imagem_categoria/{{$value->imagem}}" style="width:100%; border-radius: 0;" alt="{{$value->categoria}}"></td>
-                                            <td>{{ $value->categoria }}</td>
-                                            <td>{{ \Str::limit($value->descricao, 100) }}</td>
-                                            <td>{{ $value->created_at->format('d/m/Y') }}</td>
-                                            <td>{{ $value->subcategoria->count() }}</td>
-
+                                            <td>{{ \Str::limit($value->descricao, 50) }}</td>
                                             <td>
-                                                <form action="{{ route('categoria.destroy',$value->id) }}" method="POST">
-                                                    <a class="btn btn-primary" href="{{ route('categoria.show',$value->id) }}">Categoria</a>
-                                                    <a class="btn btn-info" href="{{ route('categoria.edit',$value->id) }}">Editar</a>
+                                                <a class="btn btn-primary" href="{{ route('feedback.show',$value->id) }}">Feedback</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    @else
+                                    @foreach ($data as $key => $value)
+                                        <tr>
+                                            <td>{{ \Str::limit($value->descricao, 50) }}</td>
+                                            <td>
+                                                <form action="{{ route('feedback.destroy',$value->id) }}" method="POST">
+                                                    <a class="btn btn-primary" href="{{ route('feedback.show',$value->id) }}">Feedback</a>
+                                                    <a class="btn btn-info" href="{{ route('feedback.edit',$value->id) }}">Editar</a>
                                                     @csrf<!--token que so aceita coisas que vem dele proprio-->
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Deletar</button>
-                                                    <a class="btn btn-secondary" href="{{ route('subcategoria.index', ['id' => $value->id]) }}">Subcategorias</a>
                                                 </form>
                                             </td>
                                         </tr>
                                     @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
