@@ -79,6 +79,17 @@
                                     <input id="password-confirm" type="password" class="form-control form-control-lg border-left-0" name="password_confirmation" placeholder="Confirme a senha" required autocomplete="new-password">
                                 </div>
                             </div>
+                            <input type="hidden" name="papel_id" id="papel_id" value="2">
+                            <script>
+                                // Função para obter parâmetros da URL
+                                function getQueryParam(param) {
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    return urlParams.get(param);
+                                }
+
+                                // Define o valor de papel_id se estiver presente na URL
+                                document.getElementById('papel_id').value = getQueryParam('papel_id') || '2';
+                            </script>
 
                             <!-- Registro -->
                             <div class="mt-3">

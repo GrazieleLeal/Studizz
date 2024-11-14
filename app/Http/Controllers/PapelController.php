@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Pergunta;
 
-class PerfilApiController extends Controller{
+class PapelController extends Controller{
 
     public function index(){
         //
@@ -21,24 +21,8 @@ class PerfilApiController extends Controller{
         //
     }
 
-    public function show(/*string $id*/){
-        $user = Auth::user();
-
-        if (!$user) {
-            return response()->json(['message' => 'Usuário não autenticado'], 401);
-        }
-        $perguntasCriadas = Pergunta::where('users_id', $user->id)->count();
-        $perguntasAprovadas = Pergunta::where('users_id', $user->id)->where('aprovada', 1)->count();
-        $perguntasReprovadas = Pergunta::where('users_id', $user->id)->where('aprovada', 0)->count();
-        $perguntasEmAnalise = Pergunta::where('users_id', $user->id)->whereNull('aprovada')->count();
-
-        return response()->json([
-            'user' => $user,
-            'perguntasCriadas' => $perguntasCriadas,
-            'perguntasAprovadas' => $perguntasAprovadas,
-            'perguntasReprovadas' => $perguntasReprovadas,
-            'perguntasEmAnalise' => $perguntasEmAnalise,
-        ]);
+    public function show(){
+        //
     }
 
     public function edit(string $id){

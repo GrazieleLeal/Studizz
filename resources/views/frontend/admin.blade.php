@@ -9,7 +9,7 @@
                     <p class="section-subtitle ">dos usuários</p>
                 </div>
                 <div class="testimonial-carousel-navbtn-wrapper ">
-                    
+
                 </div>
             </div>
             <div class="landing-testimonial-carousel wow fadeInUp ">
@@ -40,7 +40,7 @@
 
 <section>
     <div class="container wow fadeIn ">
-        <button class="new-admin btn-primary ">Adicionar novo admin</button>
+        <button onclick="window.location.href='{{ route('register') }}?papel_id=1'" class="new-admin btn-primary">Adicionar novo admin</button>
     </div>
 </section>
 @endsection
